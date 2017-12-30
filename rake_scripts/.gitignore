@@ -1,0 +1,4 @@
+syntax: glob
+
+# include rake /bin directory
+![Bb]in

@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2009
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OmniView.Library", "OmniView.Library\OmniView.Library.csproj", "{5D63CAD9-C94A-49EA-BF5C-749AB7406BDA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Pi|Any CPU = Pi|Any CPU
+		Pi|x86 = Pi|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5D63CAD9-C94A-49EA-BF5C-749AB7406BDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D63CAD9-C94A-49EA-BF5C-749AB7406BDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D63CAD9-C94A-49EA-BF5C-749AB7406BDA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5D63CAD9-C94A-49EA-BF5C-749AB7406BDA}.Debug|x86.Build.0 = Debug|Any CPU
+		{5D63CAD9-C94A-49EA-BF5C-749AB7406BDA}.Pi|Any CPU.ActiveCfg = Release|Any CPU
+		{5D63CAD9-C94A-49EA-BF5C-749AB7406BDA}.Pi|Any CPU.Build.0 = Release|Any CPU
+		{5D63CAD9-C94A-49EA-BF5C-749AB7406BDA}.Pi|x86.ActiveCfg = Release|Any CPU
+		{5D63CAD9-C94A-49EA-BF5C-749AB7406BDA}.Pi|x86.Build.0 = Release|Any CPU
+		{5D63CAD9-C94A-49EA-BF5C-749AB7406BDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D63CAD9-C94A-49EA-BF5C-749AB7406BDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D63CAD9-C94A-49EA-BF5C-749AB7406BDA}.Release|x86.ActiveCfg = Release|Any CPU
+		{5D63CAD9-C94A-49EA-BF5C-749AB7406BDA}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F559478D-FD9B-4775-9ABB-8F65B8B4B67B}
+	EndGlobalSection
+EndGlobal
