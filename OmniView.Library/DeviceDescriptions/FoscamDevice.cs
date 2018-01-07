@@ -17,6 +17,7 @@ namespace OmniView.Library.DeviceDescriptions
 
         public IDeviceDescription Description {get;}
         public DeviceCapabilities Capabilities {get;}
+        public DeviceResolution? Resolution {get; private set;}
 
 
         public FoscamDevice(IDeviceDescription description)
@@ -33,14 +34,19 @@ namespace OmniView.Library.DeviceDescriptions
             };
         }
 
-        public UrlBuilder GetPictureUrl(string format)
+        public UrlBuilder GetPictureUrl()
         {
             return GetUrlBuilder("snapshot.cgi");
         }
 
-        public UrlBuilder GetVideoUrl(string format)
+        public UrlBuilder GetVideoUrl()
         {
             return GetUrlBuilder("videostream.cgi");
+        }
+
+        public async Task SetResolution(DeviceResolution resolution)
+        {
+            await Task.Run(() => throw new NotImplementedException());
         }
 
         public async Task SetPtzDirectionAsync(PtzDirection direction)

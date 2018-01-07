@@ -10,6 +10,8 @@ namespace OmniView.Library.Devices
         public Dictionary<string, string> Metadata {get;}
         public Stream ImageData {get; set;}
 
+        public long Size => ImageData?.Length ?? 0;
+
 
         public VideoFrame()
         {

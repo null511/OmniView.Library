@@ -11,6 +11,11 @@ namespace OmniView.Library.DeviceDescriptions
 
         public IDeviceDescription Description {get;}
         public DeviceCapabilities Capabilities {get;}
+        public DeviceResolution? Resolution {get; private set;}
+
+        public bool? ShowText {get; set;}
+        public bool? ShowDate {get; set;}
+        public bool? ShowClock {get; set;}
 
 
         public AxisDevice(IDeviceDescription description)
@@ -25,16 +30,34 @@ namespace OmniView.Library.DeviceDescriptions
                 SupportsPanTilt = false,
                 SupportsZoom = false,
             };
+
+            ShowText = false;
+            ShowDate = false;
+            ShowClock = false;
         }
 
-        public UrlBuilder GetPictureUrl(string format)
+        public UrlBuilder GetPictureUrl()
         {
             return GetUrlBuilder("axis-cgi/jpg/image.cgi");
         }
 
-        public UrlBuilder GetVideoUrl(string format)
+        public UrlBuilder GetVideoUrl()
         {
-            return GetUrlBuilder("axis-cgi/mjpg/video.cgi");
+            var builder = GetUrlBuilder("axis-cgi/mjpg/video.cgi");
+
+            if (Resolution.HasValue)
+                builder.Query["resolution"] = $"{Resolution.Value.Width}x{Resolution.Value.Height}";
+
+            if (ShowText.HasValue) builder.Query["text"] = ShowText.Value ? 1 : 0;
+            if (ShowDate.HasValue) builder.Query["date"] = ShowDate.Value ? 1 : 0;
+            if (ShowClock.HasValue) builder.Query["clock"] = ShowClock.Value ? 1 : 0;
+
+            return builder;
+        }
+
+        public async Task SetResolution(DeviceResolution resolution)
+        {
+            await Task.Run(() => this.Resolution = resolution);
         }
 
         private int currentPanSpeed;

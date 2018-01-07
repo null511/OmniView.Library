@@ -18,14 +18,14 @@ namespace OmniView.Library.Devices
             Client = new DeviceClient();
         }
 
-        public VideoFrame TakePicture(string format)
+        public VideoFrame TakePicture()
         {
             if (!Device.Capabilities.SupportsPicture)
                 throw new ApplicationException("Device does not support pictures!");
 
             // Use request timestamp
             var time = DateTime.Now;
-            var url = Device.GetPictureUrl(format);
+            var url = Device.GetPictureUrl();
             var result = Client.Get(url.ToString());
 
             return new VideoFrame {
@@ -34,14 +34,14 @@ namespace OmniView.Library.Devices
             };
         }
 
-        public async Task<VideoFrame> TakePictureAsync(string format)
+        public async Task<VideoFrame> TakePictureAsync()
         {
             if (!Device.Capabilities.SupportsPicture)
                 throw new ApplicationException("Device does not support pictures!");
 
             // Use request timestamp
             var time = DateTime.Now;
-            var url = Device.GetPictureUrl(format);
+            var url = Device.GetPictureUrl();
             var result = await Client.GetAsync(url.ToString());
 
             return new VideoFrame {

@@ -52,6 +52,7 @@
     <Compile Include="DeviceDescriptions\AxisDevice.cs" />
     <Compile Include="Devices\DeviceAttribute.cs" />
     <Compile Include="Devices\DeviceDriverBase.cs" />
+    <Compile Include="Devices\DeviceResolution.cs" />
     <Compile Include="Devices\DeviceTypes.cs" />
     <Compile Include="DeviceDescriptions\FoscamDevice.cs" />
     <Compile Include="Devices\DeviceCapabilities.cs" />

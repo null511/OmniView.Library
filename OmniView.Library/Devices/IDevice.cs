@@ -7,14 +7,15 @@ namespace OmniView.Library.Devices
     {
         IDeviceDescription Description {get;}
         DeviceCapabilities Capabilities {get;}
+        DeviceResolution? Resolution {get;}
 
 
-        // TODO: Change format to a picture format enumeration
-        UrlBuilder GetPictureUrl(string format);
+        UrlBuilder GetPictureUrl();
 
-        // TODO: Change format to a video format enumeration
-        UrlBuilder GetVideoUrl(string format);
+        UrlBuilder GetVideoUrl();
 
         Task SetPtzDirectionAsync(PtzDirection direction);
+
+        Task SetResolution(DeviceResolution resolution);
     }
 }
