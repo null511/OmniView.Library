@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>OmniView.Library</id>
+    <title>OmniView Library</title>
+    <version>$version$</version>
+    <authors>null511</authors>
+    <projectUrl>http://github.com/null511/OmniView.Library</projectUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <summary>.NET library for viewing and interacting with motion jpeg devices.</summary>
+    <description>C# .NET library for viewing and interacting with motion jpeg devices.</description>
+    <copyright>Copyright 2018</copyright>
+    <tags>omniview motion jpeg mjpeg</tags>
+  </metadata>
+</package>
