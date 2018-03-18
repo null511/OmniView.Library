@@ -6,6 +6,7 @@
     <version>$version$</version>
     <authors>null511</authors>
     <projectUrl>http://github.com/null511/OmniView.Library</projectUrl>
+    <licenseUrl>https://raw.githubusercontent.com/null511/OmniView.Library/master/LICENSE</licenseUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <summary>.NET library for viewing and interacting with motion jpeg devices.</summary>
     <description>C# .NET library for viewing and interacting with motion jpeg devices.</description>
