@@ -45,6 +45,7 @@
     <Compile Include="Common\ByteSize.cs" />
     <Compile Include="Common\DisposableExtensions.cs" />
     <Compile Include="Common\DocumentBase.cs" />
+    <Compile Include="Common\ExceptionExtensions.cs" />
     <Compile Include="Common\NetPath.cs" />
     <Compile Include="Common\StringExtensions.cs" />
     <Compile Include="Common\XmlExtensions.cs" />
@@ -62,7 +63,12 @@
     <Compile Include="Devices\IDeviceDescription.cs" />
     <Compile Include="Devices\PtzDirection.cs" />
     <Compile Include="Devices\VideoFrame.cs" />
+    <Compile Include="Logging\FileLogger.cs" />
+    <Compile Include="Logging\ILog.cs" />
+    <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Logging\LogManager.cs" />
     <Compile Include="MJpeg\BufferWriter.cs" />
+    <Compile Include="MJpeg\MJpegImage.cs" />
     <Compile Include="MJpeg\MJpegStream.cs" />
     <Compile Include="MJpeg\MJpegThread.cs" />
     <Compile Include="MJpeg\RenderEventArgs.cs" />

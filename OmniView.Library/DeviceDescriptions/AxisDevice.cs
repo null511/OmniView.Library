@@ -7,8 +7,10 @@ namespace OmniView.Library.DeviceDescriptions
     [Device("axis", "Axis")]
     public class AxisDevice : IDevice
     {
-        private readonly DeviceClient client;
+        private int currentPanSpeed;
+        private int currentTiltSpeed;
 
+        public DeviceClient Client {get;}
         public IDeviceDescription Description {get;}
         public DeviceCapabilities Capabilities {get;}
         public DeviceResolution? Resolution {get; private set;}
@@ -22,7 +24,7 @@ namespace OmniView.Library.DeviceDescriptions
         {
             this.Description = description;
 
-            client = new DeviceClient();
+            Client = new DeviceClient();
 
             Capabilities = new DeviceCapabilities {
                 SupportsPicture = true,
@@ -38,7 +40,16 @@ namespace OmniView.Library.DeviceDescriptions
 
         public UrlBuilder GetPictureUrl()
         {
-            return GetUrlBuilder("axis-cgi/jpg/image.cgi");
+            var builder = GetUrlBuilder("axis-cgi/jpg/image.cgi");
+
+            if (Resolution.HasValue)
+                builder.Query["resolution"] = $"{Resolution.Value.Width}x{Resolution.Value.Height}";
+
+            if (ShowText.HasValue) builder.Query["text"] = ShowText.Value ? 1 : 0;
+            if (ShowDate.HasValue) builder.Query["date"] = ShowDate.Value ? 1 : 0;
+            if (ShowClock.HasValue) builder.Query["clock"] = ShowClock.Value ? 1 : 0;
+
+            return builder;
         }
 
         public UrlBuilder GetVideoUrl()
@@ -59,9 +70,6 @@ namespace OmniView.Library.DeviceDescriptions
         {
             await Task.Run(() => this.Resolution = resolution);
         }
-
-        private int currentPanSpeed;
-        private int currentTiltSpeed;
 
         public async Task SetPtzDirectionAsync(PtzDirection direction)
         {
@@ -92,7 +100,7 @@ namespace OmniView.Library.DeviceDescriptions
             var url = GetUrlBuilder("axis-cgi/com/ptz.cgi");
             url.Query["continuouspantiltmove"] = $"{panSpeed},{tiltSpeed}";
 
-            await client.GetAsync(url.ToString());
+            await Client.GetAsync(url.ToString());
         }
 
         private UrlBuilder GetUrlBuilder(string path)

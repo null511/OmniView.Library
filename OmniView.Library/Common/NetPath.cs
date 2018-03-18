@@ -16,8 +16,21 @@ namespace OmniView.Library.Common
                 var p = paths[i];
 
                 var c = builder.Length;
-                if (c > 0 && builder[c - 1] != '/' && !p.StartsWith("/"))
-                    builder.Append('/');
+
+                if (c == 0) {
+                    builder.Append(p);
+                    continue;
+                }
+
+                var endsWithSep = c > 0 && builder[c - 1] == '/';
+                var startsWithSep = p.StartsWith("/");
+
+                if (endsWithSep) {
+                    if (startsWithSep) p = p.Substring(1);
+                }
+                else {
+                    if (!startsWithSep) builder.Append("/");
+                }
 
                 builder.Append(p);
             }

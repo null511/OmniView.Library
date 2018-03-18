@@ -1,15 +1,14 @@
 ﻿using System;
-using System.IO;
 
 namespace OmniView.Library.MJpeg
 {
     public class RenderEventArgs : EventArgs
     {
-        public Stream ImageData {get;}
+        public MJpegImage Image {get;}
 
-        public RenderEventArgs(Stream imageData)
+        public RenderEventArgs(MJpegImage image)
         {
-            this.ImageData = imageData;
+            this.Image = image;
         }
     }
 }

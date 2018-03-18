@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OmniView.Library.Network;
+using System;
 using System.IO;
 using System.Net;
 using System.Threading;
@@ -12,26 +13,22 @@ namespace OmniView.Library.MJpeg
         public event EventHandler<RenderEventArgs> Render;
         public event UnhandledExceptionEventHandler RenderError;
 
-        private readonly MJpegStream mjpegStream;
         private volatile bool isRunning;
         private CancellationTokenSource tokenSource;
         private WebRequest request;
         private Thread thread;
 
 
-        public MJpegThread()
-        {
-            mjpegStream = new MJpegStream();
-            mjpegStream.Render += MjpegStream_OnRender;
-        }
-
         public void Dispose()
         {
-            if (isRunning)
-                Stop();
+            if (isRunning) Stop();
 
             tokenSource?.Dispose();
-            mjpegStream?.Dispose();
+        }
+
+        public void Start(DeviceClientRequest request)
+        {
+            Start(request.BuildRequest());
         }
 
         public void Start(WebRequest request)
@@ -52,20 +49,25 @@ namespace OmniView.Library.MJpeg
 
         public void Stop()
         {
-            tokenSource.Cancel();
+            tokenSource?.Cancel();
             isRunning = false;
 
-            try {
-                thread.Join(StopWaitTime);
-                thread.Abort();
+            if (thread != null) {
+                try {
+                    thread.Join(StopWaitTime);
+                    thread.Abort();
+                }
+                catch {}
             }
-            catch {}
         }
 
         private void ThreadProcess()
         {
             Stream responseStream = null;
             HttpWebResponse response = null;
+
+            var mjpegStream = new MJpegStream();
+            mjpegStream.Render += MjpegStream_OnRender;
 
             try {
                 response = (HttpWebResponse)request.GetResponse();
@@ -83,6 +85,7 @@ namespace OmniView.Library.MJpeg
             finally {
                 responseStream?.Dispose();
                 response?.Dispose();
+                mjpegStream.Dispose();
             }
         }
 

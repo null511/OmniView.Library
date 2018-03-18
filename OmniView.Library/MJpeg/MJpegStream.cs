@@ -11,6 +11,7 @@ namespace OmniView.Library.MJpeg
         private const int BUFFER_SIZE = 4096;
         private const int HEADER_SIZE = 256;
         private const string tag_length = "Content-Length:";
+        private const string tag_time = "Content-Time:";
         private const string stamp_format = "yyyyMMddHHmmssfff";
 
         public event EventHandler<RenderEventArgs> Render;
@@ -25,6 +26,7 @@ namespace OmniView.Library.MJpeg
         private int imgSize, imgSizeTgt;
         private string boundary_tag;
         private bool tagReadStarted;
+        private DateTime? imgTime;
 
         public Encoding Encoding {get; set;}
 
@@ -87,15 +89,13 @@ namespace OmniView.Library.MJpeg
 
         private void SwapBuffer_OnRelease(object sender, EventArgs e)
         {
-            var stream = swapBuffer.GetReadBuffer();
-
-            OnRender(stream);
+            OnRender(swapBuffer.GetReadBuffer());
         }
 
-        protected void OnRender(Stream imageData)
+        protected void OnRender(MJpegImage image)
         {
             try {
-                Render?.Invoke(this, new RenderEventArgs(imageData));
+                Render?.Invoke(this, new RenderEventArgs(image));
             }
             catch {}
         }
@@ -110,6 +110,9 @@ namespace OmniView.Library.MJpeg
             headStop = remaining_bytes;
             imgSizeTgt = 0;
             tagReadStarted = false;
+            imgTime = null;
+
+            // TODO: Clear Meta-tags
         }
 
         private void ProcessHeader()
@@ -123,6 +126,9 @@ namespace OmniView.Library.MJpeg
                 if ((nl = FindNewline(headStart, headStop, out byte[] new_newline)) >= 0) {
                     var tag = Encoding.GetString(buffer, headStart, nl - headStart);
                     if (tag.StartsWith("--")) boundary_tag = tag;
+
+                    // TODO: Store meta-tags
+
                     headStart = nl + new_newline.Length;
                     newline = new_newline;
                     isSetup = true;
@@ -139,8 +145,8 @@ namespace OmniView.Library.MJpeg
             }
 
             if (headStop >= BUFFER_SIZE) {
-                //var data = encoder.GetString(buffer, headStart, headStop - headStart);
-                throw new ApplicationException("Invalid Header!");
+                var data = Encoding.GetString(buffer, headStart, headStop - headStart);
+                throw new ApplicationException($"Invalid Header! [{data}]");
             }
         }
 
@@ -152,15 +158,25 @@ namespace OmniView.Library.MJpeg
                 return true;
             }
 
+            if (tag.StartsWith(tag_time, StringComparison.OrdinalIgnoreCase)) {
+                var val = tag.Substring(tag_time.Length);
+                imgTime = DateTime.Parse(val);
+
+                return true;
+            }
+
             if (tag.Length == 0 && tagReadStarted) {
                 if (imgSizeTgt > 0) {
                     writeBuffer = swapBuffer.GetWriteBuffer();
 
                     var remainingLength = headStop - headStart;
                     if (remainingLength > 0)
-                        writeBuffer.Stream.Write(buffer, headStart, remainingLength);
+                        writeBuffer.Write(buffer, headStart, remainingLength);
 
-                    CopyStream(data_stream, writeBuffer.Stream, imgSizeTgt - remainingLength);
+                    CopyStream(data_stream, writeBuffer.Image.Buffer, imgSizeTgt - remainingLength);
+
+                    writeBuffer.Image.Time = imgTime ?? DateTime.Now;
+                    writeBuffer.Image.Size = imgSizeTgt;
 
                     ProcessImageData(0);
                     StartHeader(0);
@@ -170,7 +186,7 @@ namespace OmniView.Library.MJpeg
                     writeBuffer = swapBuffer.GetWriteBuffer();
 
                     var remainingLength = headStop - headStart;
-                    writeBuffer.Stream.Write(buffer, headStart, remainingLength);
+                    writeBuffer.Write(buffer, headStart, remainingLength);
 
                     imgBufferStart = remainingLength;
                     imgSize = 0;
@@ -222,6 +238,10 @@ namespace OmniView.Library.MJpeg
                     AppendImageData(start, nl - start);
                     int xstart = nl+nl_length + tag_length;
                     int xsize = ShiftBytes(xstart, end);
+
+                    writeBuffer.Image.Time = imgTime ?? DateTime.Now;
+                    writeBuffer.Image.Size = writeBuffer.Image.Buffer.Length;
+
                     ProcessImageData(xsize);
                     return;
                 } else {
@@ -248,7 +268,7 @@ namespace OmniView.Library.MJpeg
         }
 
         private void AppendImageData(int index, int length) {
-            writeBuffer.Stream.Write(buffer, index, length);
+            writeBuffer.Write(buffer, index, length);
             imgSize += (length - index);
         }
 

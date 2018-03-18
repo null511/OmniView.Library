@@ -41,9 +41,13 @@ namespace OmniView.Library.Devices
 
             // Use request timestamp
             var time = DateTime.Now;
-            var url = Device.GetPictureUrl();
-            var result = await Client.GetAsync(url.ToString());
 
+            var request = Client.GetRequest();
+            request.AllowAutoRedirect = false;
+            request.Url = Device.GetPictureUrl();
+            request.KeepAlive = false;
+
+            using (var result = await request.SendAsync())
             return new VideoFrame {
                 Time = time,
                 ImageData = await result.As.BufferedStreamAsync()

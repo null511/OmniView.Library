@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Threading;
 
 namespace OmniView.Library.MJpeg
@@ -11,7 +10,7 @@ namespace OmniView.Library.MJpeg
 
         public event EventHandler Release;
 
-        private readonly Stream buffer_a, buffer_b;
+        private readonly MJpegImage buffer_a, buffer_b;
         private BufferWriter currentWriter;
         private bool write_a;
 
@@ -19,8 +18,8 @@ namespace OmniView.Library.MJpeg
         public SwapBuffer()
         {
             write_a = true;
-            buffer_a = new MemoryStream();
-            buffer_b = new MemoryStream();
+            buffer_a = new MJpegImage();
+            buffer_b = new MJpegImage();
 
             writeLock_a = new ManualResetEventSlim(true);
             writeLock_b = new ManualResetEventSlim(true);
@@ -39,7 +38,7 @@ namespace OmniView.Library.MJpeg
             if (write_a) {
                 writeLock_a.Wait();
 
-                buffer_a.SetLength(0);
+                buffer_a.Clear();
                 writeLock_a.Reset();
 
                 return currentWriter = new BufferWriter(buffer_a, () => {
@@ -52,7 +51,7 @@ namespace OmniView.Library.MJpeg
             else {
                 writeLock_b.Wait();
 
-                buffer_b.SetLength(0);
+                buffer_b.Clear();
                 writeLock_b.Reset();
 
                 return currentWriter = new BufferWriter(buffer_b, () => {
@@ -64,7 +63,7 @@ namespace OmniView.Library.MJpeg
             }
         }
 
-        public Stream GetReadBuffer()
+        public MJpegImage GetReadBuffer()
         {
             return write_a ? buffer_b : buffer_a;
         }

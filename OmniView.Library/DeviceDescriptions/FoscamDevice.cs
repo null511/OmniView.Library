@@ -9,12 +9,12 @@ namespace OmniView.Library.DeviceDescriptions
     [Device("foscam", "Foscam")]
     public class FoscamDevice : IDevice
     {
-        private DeviceClient client;
         private bool isLookUp;
         private bool isLookDown;
         private bool isLookLeft;
         private bool isLookRight;
 
+        public DeviceClient Client {get;}
         public IDeviceDescription Description {get;}
         public DeviceCapabilities Capabilities {get;}
         public DeviceResolution? Resolution {get; private set;}
@@ -24,7 +24,7 @@ namespace OmniView.Library.DeviceDescriptions
         {
             this.Description = description;
 
-            client = new DeviceClient();
+            Client = new DeviceClient();
 
             Capabilities = new DeviceCapabilities {
                 SupportsPicture = true,
@@ -82,7 +82,7 @@ namespace OmniView.Library.DeviceDescriptions
             var url = GetUrlBuilder("decoder_control.cgi");
             url.Query["command"] = value;
 
-            using (var response = await client.GetAsync(url.ToString())) {
+            using (var response = await Client.GetAsync(url.ToString())) {
                 if (response.HttpResponse.StatusCode != HttpStatusCode.OK)
                     throw new ApplicationException("DecoderControl Error!");
             }

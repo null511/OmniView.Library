@@ -5,6 +5,7 @@ namespace OmniView.Library.Devices
 {
     public interface IDevice
     {
+        DeviceClient Client {get;}
         IDeviceDescription Description {get;}
         DeviceCapabilities Capabilities {get;}
         DeviceResolution? Resolution {get;}

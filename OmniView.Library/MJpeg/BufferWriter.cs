@@ -7,19 +7,24 @@ namespace OmniView.Library.MJpeg
     {
         private readonly Action releaseAction;
 
-        public Stream Stream {get;}
+        public MJpegImage Image {get;}
 
 
-        internal BufferWriter(Stream stream, Action releaseAction)
+        internal BufferWriter(MJpegImage image, Action releaseAction)
         {
-            this.Stream = stream;
+            this.Image = image;
             this.releaseAction = releaseAction;
         }
 
         public void Release()
         {
-            Stream.Seek(0, SeekOrigin.Begin);
+            Image.Buffer.Seek(0, SeekOrigin.Begin);
             releaseAction?.Invoke();
+        }
+
+        public void Write(byte[] buffer, int offset, int count)
+        {
+            Image.Buffer.Write(buffer, offset, count);
         }
     }
 }
